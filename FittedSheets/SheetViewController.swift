@@ -208,6 +208,8 @@ public class SheetViewController: UIViewController {
         self.addBlurBackground()
         self.addContentView()
         self.addOverlayTapView()
+        self.view.layoutSubviews()
+	    
         self.registerKeyboardObservers()
         self.resize(to: self.sizes.first ?? .intrinsic, animated: false)
     }
@@ -281,7 +283,6 @@ public class SheetViewController: UIViewController {
         }
         self.overlayView.isUserInteractionEnabled = false
         self.overlayView.backgroundColor = self.hasBlurBackground ? .clear : self.overlayColor
-        self.view.layoutSubviews()
     }
     
     private func addBlurBackground() {
