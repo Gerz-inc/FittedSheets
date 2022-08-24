@@ -281,6 +281,7 @@ public class SheetViewController: UIViewController {
         }
         self.overlayView.isUserInteractionEnabled = false
         self.overlayView.backgroundColor = self.hasBlurBackground ? .clear : self.overlayColor
+        self.view.layoutSubviews()
     }
     
     private func addBlurBackground() {
