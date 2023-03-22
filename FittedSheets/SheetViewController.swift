@@ -519,9 +519,9 @@ public class SheetViewController: UIViewController {
         let contentHeight: CGFloat
         let fullscreenHeight: CGFloat
         if self.options.useFullScreenMode {
-            fullscreenHeight = self.view.bounds.height - self.minimumSpaceAbovePullBar
+            fullscreenHeight = max(0, self.view.bounds.height - self.minimumSpaceAbovePullBar)
         } else {
-            fullscreenHeight = self.view.bounds.height - self.view.compatibleSafeAreaInsets.top - self.minimumSpaceAbovePullBar
+            fullscreenHeight = max(0, self.view.bounds.height - self.view.compatibleSafeAreaInsets.top - self.minimumSpaceAbovePullBar)
         }
         switch (size) {
             case .fixed(let height):
