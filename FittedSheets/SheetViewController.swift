@@ -189,7 +189,7 @@ public class SheetViewController: UIViewController {
     
     public override func loadView() {
         if self.options.useInlineMode {
-            let sheetView = SheetView()
+            let sheetView = SheetView(frame: CGRect(x: 0, y: 0, width: 300, height: 600))
             sheetView.delegate = self
             self.view = sheetView
         } else {
