@@ -136,6 +136,7 @@ public class SheetViewController: UIViewController {
     public var shouldDismiss: ((SheetViewController) -> Bool)?
     public var didDismiss: ((SheetViewController) -> Void)?
     public var sizeChanged: ((SheetViewController, SheetSize, CGFloat) -> Void)?
+    public var sizeChanging: ((SheetViewController, CGFloat, CGFloat) -> Void)?
     public var panGestureShouldBegin: ((UIPanGestureRecognizer) -> Bool?)?
     
     public private(set) var contentViewController: SheetContentViewController
@@ -382,14 +383,17 @@ public class SheetViewController: UIViewController {
         
         switch gesture.state {
             case .cancelled, .failed:
+                let finalHeight = self.height(for: self.currentSize)
                 UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseOut], animations: {
                     self.contentViewController.view.transform = CGAffineTransform.identity
-                    self.contentViewHeightConstraint.constant = self.height(for: self.currentSize)
+                    self.contentViewHeightConstraint.constant = finalHeight
                     self.transition.setPresentor(percentComplete: 0)
                     self.overlayView.alpha = 1
                 }, completion: { _ in
                     self.isPanning = false
                 })
+            
+                self.sizeChanging?(self, finalHeight, (finalHeight - minHeight) / (maxHeight - minHeight))
             
             case .began, .changed:
                 self.contentViewHeightConstraint.constant = newHeight
@@ -402,6 +406,9 @@ public class SheetViewController: UIViewController {
                 } else {
                     self.contentViewController.view.transform = CGAffineTransform.identity
                 }
+            
+                self.sizeChanging?(self, newHeight, (newHeight - minHeight) / (maxHeight - minHeight))
+            
             case .ended:
                 let velocity = (0.2 * gesture.velocity(in: self.view).y)
                 var finalHeight = newHeight - offset - velocity
@@ -475,6 +482,9 @@ public class SheetViewController: UIViewController {
                         self.sizeChanged?(self, newSize, newContentHeight)
                     }
                 })
+            
+                self.sizeChanging?(self, newContentHeight, (newContentHeight - minHeight) / (maxHeight - minHeight))
+            
             case .possible:
                 break
             @unknown default:
